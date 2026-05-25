@@ -6,18 +6,30 @@ const AdminDashboard = () => {
   const [orders, setOrders] = useState([]);
   const [search, setSearch] = useState("");
 
+  const [editingOrder, setEditingOrder] = useState(null);
+  const [editForm, setEditForm] = useState({
+    fullName: "",
+    email: "",
+    whatsapp: "",
+    position: "",
+    packageName: "",
+    notes: "",
+    paymentStatus: "Pending",
+    orderStatus: "Pending",
+  });
+
   const navigate = useNavigate();
 
   useEffect(() => {
-  const token = localStorage.getItem("adminToken");
+    const token = localStorage.getItem("adminToken");
 
-  if (!token) {
-    navigate("/admin/login");
-    return;
-  }
+    if (!token) {
+      navigate("/admin/login");
+      return;
+    }
 
-  fetchOrders();
-}, []);
+    fetchOrders();
+  }, []);
 
   const fetchOrders = async () => {
     try {
@@ -52,6 +64,42 @@ const AdminDashboard = () => {
     }
   };
 
+  const openEditModal = (order) => {
+    setEditingOrder(order);
+
+    setEditForm({
+      fullName: order.fullName || "",
+      email: order.email || "",
+      whatsapp: order.whatsapp || "",
+      position: order.position || "",
+      packageName: order.packageName || "",
+      notes: order.notes || "",
+      paymentStatus: order.paymentStatus || "Pending",
+      orderStatus: order.orderStatus || "Pending",
+    });
+  };
+
+  const handleEditChange = (e) => {
+    setEditForm({
+      ...editForm,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const saveEditedOrder = async () => {
+    try {
+      const response = await API.put(`/orders/${editingOrder._id}`, editForm);
+
+      if (response.data.success) {
+        setEditingOrder(null);
+        fetchOrders();
+      }
+    } catch (error) {
+      console.log(error);
+      alert("Order update failed");
+    }
+  };
+
   const deleteOrder = async (id) => {
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this order?"
@@ -72,18 +120,28 @@ const AdminDashboard = () => {
   };
 
   const handleLogout = () => {
-  localStorage.removeItem("adminToken");
-  localStorage.removeItem("adminLoggedIn");
-  localStorage.removeItem("adminName");
-  navigate("/admin/login");
-};
+    localStorage.removeItem("adminToken");
+    localStorage.removeItem("adminLoggedIn");
+    localStorage.removeItem("adminName");
+    navigate("/admin/login");
+  };
+
+  const getFileUrl = (fileName) => {
+    return `${API.defaults.baseURL.replace("/api", "")}/uploads/${fileName}`;
+  };
+
+  const getWhatsAppNumber = (number) => {
+    if (!number) return "";
+    return `94${number.replace(/^0/, "")}`;
+  };
 
   const filteredOrders = orders.filter(
     (order) =>
       order.fullName?.toLowerCase().includes(search.toLowerCase()) ||
       order.email?.toLowerCase().includes(search.toLowerCase()) ||
       order.whatsapp?.toLowerCase().includes(search.toLowerCase()) ||
-      order.packageName?.toLowerCase().includes(search.toLowerCase())
+      order.packageName?.toLowerCase().includes(search.toLowerCase()) ||
+      order.position?.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
@@ -123,7 +181,7 @@ const AdminDashboard = () => {
       <div className="admin-search">
         <input
           type="text"
-          placeholder="Search orders by name, email, WhatsApp or package..."
+          placeholder="Search orders by name, email, WhatsApp, position or package..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
@@ -143,13 +201,28 @@ const AdminDashboard = () => {
                 <span>{order.packageName}</span>
               </div>
 
-              <p><strong>Position:</strong> {order.position}</p>
-<p><strong>Notes:</strong> {order.notes || "No notes"}</p>
+              <p>
+                <strong>Email:</strong> {order.email}
+              </p>
 
-<p>
-  <strong>Order Date:</strong>{" "}
-  {new Date(order.createdAt).toLocaleString()}
-</p>
+              <p>
+                <strong>WhatsApp:</strong> {order.whatsapp}
+              </p>
+
+              <p>
+                <strong>Position:</strong> {order.position}
+              </p>
+
+              <p>
+                <strong>Notes:</strong> {order.notes || "No notes"}
+              </p>
+
+              <p>
+                <strong>Order Date:</strong>{" "}
+                {order.createdAt
+                  ? new Date(order.createdAt).toLocaleString()
+                  : "N/A"}
+              </p>
 
               <div className="admin-select-group">
                 <label>Payment Status</label>
@@ -181,41 +254,123 @@ const AdminDashboard = () => {
 
               <div className="order-actions">
                 {order.cvFile && (
-  <>
-    <a
-      href={`http://localhost:5000/uploads/${order.cvFile}`}
-      target="_blank"
-      rel="noreferrer"
-    >
-      View CV
-    </a>
+                  <>
+                    <a
+                      href={getFileUrl(order.cvFile)}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      View CV
+                    </a>
 
-    <a
-      href={`http://localhost:5000/uploads/${order.cvFile}`}
-      download
-    >
-      Download CV
-    </a>
-  </>
-)}
+                    <a href={getFileUrl(order.cvFile)} download>
+                      Download CV
+                    </a>
+                  </>
+                )}
 
                 <a
-  href={`https://wa.me/94${order.whatsapp.replace(/^0/, "")}?text=${encodeURIComponent(
-    `Hello ${order.fullName}, thank you for ordering the ${order.packageName} package from NextStep CV. Our CV expert will review your details and contact you shortly.`
-  )}`}
-  target="_blank"
-  rel="noreferrer"
-  className="whatsapp-action"
->
-  WhatsApp
-</a>
+                  href={`https://wa.me/${getWhatsAppNumber(
+                    order.whatsapp
+                  )}?text=${encodeURIComponent(
+                    `Hello ${order.fullName}, thank you for ordering the ${order.packageName} package from NextStep CV. Our CV expert will review your details and contact you shortly.`
+                  )}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="whatsapp-action"
+                >
+                  WhatsApp
+                </a>
 
-                <button onClick={() => deleteOrder(order._id)}>
-                  Delete
+                <button
+                  onClick={() => openEditModal(order)}
+                  className="edit-action"
+                >
+                  Edit
                 </button>
+
+                <button onClick={() => deleteOrder(order._id)}>Delete</button>
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {editingOrder && (
+        <div className="edit-modal-overlay">
+          <div className="edit-modal">
+            <h2>Edit Order</h2>
+
+            <input
+              name="fullName"
+              value={editForm.fullName}
+              onChange={handleEditChange}
+              placeholder="Full Name"
+            />
+
+            <input
+              name="email"
+              value={editForm.email}
+              onChange={handleEditChange}
+              placeholder="Email"
+            />
+
+            <input
+              name="whatsapp"
+              value={editForm.whatsapp}
+              onChange={handleEditChange}
+              placeholder="WhatsApp"
+            />
+
+            <input
+              name="position"
+              value={editForm.position}
+              onChange={handleEditChange}
+              placeholder="Position"
+            />
+
+            <select
+              name="packageName"
+              value={editForm.packageName}
+              onChange={handleEditChange}
+            >
+              <option>Basic</option>
+              <option>Professional</option>
+              <option>Executive</option>
+            </select>
+
+            <select
+              name="paymentStatus"
+              value={editForm.paymentStatus}
+              onChange={handleEditChange}
+            >
+              <option>Pending</option>
+              <option>Paid</option>
+              <option>Failed</option>
+            </select>
+
+            <select
+              name="orderStatus"
+              value={editForm.orderStatus}
+              onChange={handleEditChange}
+            >
+              <option>Pending</option>
+              <option>In Progress</option>
+              <option>Completed</option>
+            </select>
+
+            <textarea
+              name="notes"
+              value={editForm.notes}
+              onChange={handleEditChange}
+              placeholder="Notes"
+            />
+
+            <div className="edit-modal-actions">
+              <button onClick={saveEditedOrder}>Save Changes</button>
+              <button onClick={() => setEditingOrder(null)}>Cancel</button>
+            </div>
+          </div>
         </div>
       )}
     </div>
