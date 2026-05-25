@@ -1,12 +1,25 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import {
+  PieChart,
+  Pie,
+  Cell,
+  Tooltip,
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Legend,
+} from "recharts";
 import API from "../api/api";
 
 const AdminDashboard = () => {
   const [orders, setOrders] = useState([]);
   const [search, setSearch] = useState("");
-
   const [editingOrder, setEditingOrder] = useState(null);
+
   const [editForm, setEditForm] = useState({
     fullName: "",
     email: "",
@@ -144,6 +157,26 @@ const AdminDashboard = () => {
       order.position?.toLowerCase().includes(search.toLowerCase())
   );
 
+  const paymentData = [
+    { name: "Paid", value: orders.filter((o) => o.paymentStatus === "Paid").length },
+    { name: "Pending", value: orders.filter((o) => o.paymentStatus === "Pending").length },
+    { name: "Failed", value: orders.filter((o) => o.paymentStatus === "Failed").length },
+  ];
+
+  const orderData = [
+    { name: "Pending", orders: orders.filter((o) => o.orderStatus === "Pending").length },
+    { name: "In Progress", orders: orders.filter((o) => o.orderStatus === "In Progress").length },
+    { name: "Completed", orders: orders.filter((o) => o.orderStatus === "Completed").length },
+  ];
+
+  const packageData = [
+    { name: "Basic", orders: orders.filter((o) => o.packageName === "Basic").length },
+    { name: "Professional", orders: orders.filter((o) => o.packageName === "Professional").length },
+    { name: "Executive", orders: orders.filter((o) => o.packageName === "Executive").length },
+  ];
+
+  const COLORS = ["#16a34a", "#ff8a00", "#ef4444"];
+
   return (
     <div className="admin-dashboard">
       <div className="admin-topbar">
@@ -156,7 +189,6 @@ const AdminDashboard = () => {
           <button onClick={fetchOrders} className="refresh-btn">
             Refresh
           </button>
-
           <button onClick={handleLogout}>Logout</button>
         </div>
       </div>
@@ -175,6 +207,50 @@ const AdminDashboard = () => {
         <div>
           <h2>{orders.filter((o) => o.orderStatus === "Completed").length}</h2>
           <p>Completed Orders</p>
+        </div>
+      </div>
+
+      <div className="analytics-grid">
+        <div className="chart-card">
+          <h2>Payment Analytics</h2>
+          <ResponsiveContainer width="100%" height={300}>
+            <PieChart>
+              <Pie data={paymentData} cx="50%" cy="50%" outerRadius={100} dataKey="value" label>
+                {paymentData.map((entry, index) => (
+                  <Cell key={index} fill={COLORS[index % COLORS.length]} />
+                ))}
+              </Pie>
+              <Tooltip />
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
+
+        <div className="chart-card">
+          <h2>Order Progress</h2>
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={orderData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Bar dataKey="orders" fill="#071739" radius={[10, 10, 0, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+
+        <div className="chart-card">
+          <h2>Package Analytics</h2>
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={packageData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Bar dataKey="orders" fill="#ff8a00" radius={[10, 10, 0, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
         </div>
       </div>
 
@@ -201,27 +277,13 @@ const AdminDashboard = () => {
                 <span>{order.packageName}</span>
               </div>
 
-              <p>
-                <strong>Email:</strong> {order.email}
-              </p>
-
-              <p>
-                <strong>WhatsApp:</strong> {order.whatsapp}
-              </p>
-
-              <p>
-                <strong>Position:</strong> {order.position}
-              </p>
-
-              <p>
-                <strong>Notes:</strong> {order.notes || "No notes"}
-              </p>
-
+              <p><strong>Email:</strong> {order.email}</p>
+              <p><strong>WhatsApp:</strong> {order.whatsapp}</p>
+              <p><strong>Position:</strong> {order.position}</p>
+              <p><strong>Notes:</strong> {order.notes || "No notes"}</p>
               <p>
                 <strong>Order Date:</strong>{" "}
-                {order.createdAt
-                  ? new Date(order.createdAt).toLocaleString()
-                  : "N/A"}
+                {order.createdAt ? new Date(order.createdAt).toLocaleString() : "N/A"}
               </p>
 
               <div className="admin-select-group">
@@ -255,14 +317,9 @@ const AdminDashboard = () => {
               <div className="order-actions">
                 {order.cvFile && (
                   <>
-                    <a
-                      href={getFileUrl(order.cvFile)}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
+                    <a href={getFileUrl(order.cvFile)} target="_blank" rel="noreferrer">
                       View CV
                     </a>
-
                     <a href={getFileUrl(order.cvFile)} download>
                       Download CV
                     </a>
@@ -270,9 +327,7 @@ const AdminDashboard = () => {
                 )}
 
                 <a
-                  href={`https://wa.me/${getWhatsAppNumber(
-                    order.whatsapp
-                  )}?text=${encodeURIComponent(
+                  href={`https://wa.me/${getWhatsAppNumber(order.whatsapp)}?text=${encodeURIComponent(
                     `Hello ${order.fullName}, thank you for ordering the ${order.packageName} package from NextStep CV. Our CV expert will review your details and contact you shortly.`
                   )}`}
                   target="_blank"
@@ -282,10 +337,7 @@ const AdminDashboard = () => {
                   WhatsApp
                 </a>
 
-                <button
-                  onClick={() => openEditModal(order)}
-                  className="edit-action"
-                >
+                <button onClick={() => openEditModal(order)} className="edit-action">
                   Edit
                 </button>
 
@@ -301,70 +353,30 @@ const AdminDashboard = () => {
           <div className="edit-modal">
             <h2>Edit Order</h2>
 
-            <input
-              name="fullName"
-              value={editForm.fullName}
-              onChange={handleEditChange}
-              placeholder="Full Name"
-            />
+            <input name="fullName" value={editForm.fullName} onChange={handleEditChange} placeholder="Full Name" />
+            <input name="email" value={editForm.email} onChange={handleEditChange} placeholder="Email" />
+            <input name="whatsapp" value={editForm.whatsapp} onChange={handleEditChange} placeholder="WhatsApp" />
+            <input name="position" value={editForm.position} onChange={handleEditChange} placeholder="Position" />
 
-            <input
-              name="email"
-              value={editForm.email}
-              onChange={handleEditChange}
-              placeholder="Email"
-            />
-
-            <input
-              name="whatsapp"
-              value={editForm.whatsapp}
-              onChange={handleEditChange}
-              placeholder="WhatsApp"
-            />
-
-            <input
-              name="position"
-              value={editForm.position}
-              onChange={handleEditChange}
-              placeholder="Position"
-            />
-
-            <select
-              name="packageName"
-              value={editForm.packageName}
-              onChange={handleEditChange}
-            >
+            <select name="packageName" value={editForm.packageName} onChange={handleEditChange}>
               <option>Basic</option>
               <option>Professional</option>
               <option>Executive</option>
             </select>
 
-            <select
-              name="paymentStatus"
-              value={editForm.paymentStatus}
-              onChange={handleEditChange}
-            >
+            <select name="paymentStatus" value={editForm.paymentStatus} onChange={handleEditChange}>
               <option>Pending</option>
               <option>Paid</option>
               <option>Failed</option>
             </select>
 
-            <select
-              name="orderStatus"
-              value={editForm.orderStatus}
-              onChange={handleEditChange}
-            >
+            <select name="orderStatus" value={editForm.orderStatus} onChange={handleEditChange}>
               <option>Pending</option>
               <option>In Progress</option>
               <option>Completed</option>
             </select>
 
-            <textarea
-              name="notes"
-              value={editForm.notes}
-              onChange={handleEditChange}
-              placeholder="Notes"
-            />
+            <textarea name="notes" value={editForm.notes} onChange={handleEditChange} placeholder="Notes" />
 
             <div className="edit-modal-actions">
               <button onClick={saveEditedOrder}>Save Changes</button>
