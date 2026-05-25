@@ -18,6 +18,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
+/* PUBLIC: Customer order submit */
 router.post("/", upload.single("cvFile"), async (req, res) => {
   try {
     const { fullName, email, whatsapp, position, packageName, notes } = req.body;
@@ -31,28 +32,6 @@ router.post("/", upload.single("cvFile"), async (req, res) => {
       notes,
       cvFile: req.file ? req.file.filename : "",
     });
-
-    router.post("/track", async (req, res) => {
-  try {
-    const { email, whatsapp } = req.body;
-
-    const orders = await Order.find({
-      email,
-      whatsapp,
-    }).sort({ createdAt: -1 });
-
-    res.status(200).json({
-      success: true,
-      orders,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Tracking failed",
-      error: error.message,
-    });
-  }
-});
 
     await newOrder.save();
 
@@ -95,6 +74,30 @@ NextStep CV Team`
   }
 });
 
+/* PUBLIC: Customer order tracking */
+router.post("/track", async (req, res) => {
+  try {
+    const { email, whatsapp } = req.body;
+
+    const orders = await Order.find({
+      email,
+      whatsapp,
+    }).sort({ createdAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      orders,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Tracking failed",
+      error: error.message,
+    });
+  }
+});
+
+/* PROTECTED: Admin only - get all orders */
 router.get("/", protect, async (req, res) => {
   try {
     const orders = await Order.find().sort({ createdAt: -1 });
@@ -112,6 +115,7 @@ router.get("/", protect, async (req, res) => {
   }
 });
 
+/* PROTECTED: Admin only - update status */
 router.put("/:id/status", protect, async (req, res) => {
   try {
     const { orderStatus, paymentStatus } = req.body;
@@ -139,6 +143,7 @@ router.put("/:id/status", protect, async (req, res) => {
   }
 });
 
+/* PROTECTED: Admin only - edit full order */
 router.put("/:id", protect, async (req, res) => {
   try {
     const {
@@ -181,6 +186,7 @@ router.put("/:id", protect, async (req, res) => {
   }
 });
 
+/* PROTECTED: Admin only - delete order */
 router.delete("/:id", protect, async (req, res) => {
   try {
     await Order.findByIdAndDelete(req.params.id);
