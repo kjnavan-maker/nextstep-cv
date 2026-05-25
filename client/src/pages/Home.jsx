@@ -18,6 +18,8 @@ function Home() {
   const handleSubmit = async (e) => {
   e.preventDefault();
 
+  const whatsappWindow = window.open("", "_blank");
+
   try {
     const formData = new FormData(e.target);
 
@@ -45,15 +47,19 @@ Job Position: ${position}
 
 Please check my order.`;
 
-      window.open(
-        `https://wa.me/94764304068?text=${encodeURIComponent(message)}`,
-        "_blank"
-      );
+      whatsappWindow.location.href = `https://wa.me/94764304068?text=${encodeURIComponent(
+        message
+      )}`;
 
       e.target.reset();
     }
   } catch (error) {
     console.log(error);
+
+    if (whatsappWindow) {
+      whatsappWindow.close();
+    }
+
     alert("Order submit failed. Please try again.");
   }
 };
