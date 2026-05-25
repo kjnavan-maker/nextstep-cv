@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "https://nextstep-cv.onrender.com",
+  baseURL: "https://nextstep-cv.onrender.com/api",
 });
 
 API.interceptors.request.use((config) => {
