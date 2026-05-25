@@ -50,38 +50,11 @@ Please check my order.`;
         "_blank"
       );
 
-      const paymentResponse = await API.post(
-        "/payments/create-checkout-session",
-        {
-          packageName,
-          orderId: response.data.order._id,
-        }
-      );
-
-      if (paymentResponse.data.success) {
-        window.location.href = paymentResponse.data.url;
-      }
-
       e.target.reset();
     }
   } catch (error) {
     console.log(error);
-    alert("Order submit failed or payment setup failed. Please try again.");
-  }
-};
-
-  const handlePayment = async (packageName) => {
-  try {
-    const response = await API.post("/payments/create-checkout-session", {
-      packageName,
-    });
-
-    if (response.data.success) {
-      window.location.href = response.data.url;
-    }
-  } catch (error) {
-    console.log(error);
-    alert("Payment setup failed. Please try again.");
+    alert("Order submit failed. Please try again.");
   }
 };
 
@@ -238,10 +211,6 @@ Please check my order.`;
   <a href="#contact">
     <button>Order Now</button>
   </a>
-
-  <button onClick={() => handlePayment(plan.name)}>
-    Pay Now
-  </button>
 </div>
             </motion.div>
           ))}
