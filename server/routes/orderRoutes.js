@@ -117,6 +117,48 @@ router.put("/:id/status", protect, async (req, res) => {
   }
 });
 
+router.put("/:id", protect, async (req, res) => {
+  try {
+    const {
+      fullName,
+      email,
+      whatsapp,
+      position,
+      packageName,
+      notes,
+      paymentStatus,
+      orderStatus,
+    } = req.body;
+
+    const updatedOrder = await Order.findByIdAndUpdate(
+      req.params.id,
+      {
+        fullName,
+        email,
+        whatsapp,
+        position,
+        packageName,
+        notes,
+        paymentStatus,
+        orderStatus,
+      },
+      { new: true }
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Order updated successfully",
+      order: updatedOrder,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to update order",
+      error: error.message,
+    });
+  }
+});
+
 router.delete("/:id", protect, async (req, res) => {
   try {
     await Order.findByIdAndDelete(req.params.id);
