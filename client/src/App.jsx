@@ -6,6 +6,7 @@ import ProtectedRoute from "./routes/ProtectedRoute";
 import PaymentSuccess from "./payment/PaymentSuccess";
 import PaymentCancel from "./payment/PaymentCancel";
 import "./styles/global.css";
+import TrackOrder from "./pages/TrackOrder";
 
 function App() {
   return (
@@ -25,8 +26,10 @@ function App() {
               <AdminDashboard />
             </ProtectedRoute>
           }
+          
         />
       </Routes>
+      <Route path="/track-order" element={<TrackOrder />} />
     </BrowserRouter>
   );
 }
