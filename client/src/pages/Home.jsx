@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 
 function Home() {
   const [success, setSuccess] = useState(false);
+  const [whatsappLink, setWhatsappLink] = useState("");
   const [loading, setLoading] = useState(true);
   const [fileName, setFileName] = useState("No file chosen");
   const [beforeCV, setBeforeCV] = useState(null);
@@ -16,27 +17,24 @@ function Home() {
   }, []);
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  try {
-    const formData = new FormData(e.target);
+    try {
+      const formData = new FormData(e.target);
 
-    const fullName = formData.get("fullName");
-    const whatsapp = formData.get("whatsapp");
-    const packageName = formData.get("packageName");
-    const position = formData.get("position");
+      const fullName = formData.get("fullName");
+      const whatsapp = formData.get("whatsapp");
+      const packageName = formData.get("packageName");
+      const position = formData.get("position");
 
-    const response = await API.post("/orders", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
+      const response = await API.post("/orders", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
-    if (response.data.success) {
-      setSuccess(true);
-      setFileName("No file chosen");
-
-      const message = `Hello NextStep CV, I have submitted my CV order.
+      if (response.data.success) {
+        const message = `Hello NextStep CV, I have submitted my CV order.
 
 Name: ${fullName}
 WhatsApp: ${whatsapp}
@@ -45,25 +43,29 @@ Job Position: ${position}
 
 Please check my order.`;
 
-      e.target.reset();
+        setWhatsappLink(
+          `https://wa.me/94764304068?text=${encodeURIComponent(message)}`
+        );
 
-      setTimeout(() => {
-        window.location.href = `https://wa.me/94764304068?text=${encodeURIComponent(
-          message
-        )}`;
-      }, 1200);
+        setSuccess(true);
+        setFileName("No file chosen");
+        e.target.reset();
+      }
+    } catch (error) {
+      console.log(error);
+      alert("Order submit failed. Please try again.");
     }
-  } catch (error) {
-    console.log(error);
-    alert("Order submit failed. Please try again.");
-  }
-};
+  };
 
   return (
     <>
       <AnimatePresence>
         {loading && (
-          <motion.div className="loader" initial={{ opacity: 1 }} exit={{ opacity: 0 }}>
+          <motion.div
+            className="loader"
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
             <motion.div
               className="loader-logo"
               initial={{ scale: 0.85, opacity: 0 }}
@@ -79,13 +81,20 @@ Please check my order.`;
 
       <section className="hero" id="home">
         <div className="hero-content">
-          <motion.div className="hero-left" initial={{ opacity: 0, y: 35 }} animate={{ opacity: 1, y: 0 }}>
+          <motion.div
+            className="hero-left"
+            initial={{ opacity: 0, y: 35 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
             <div className="badge">ATS-Friendly CV Experts</div>
 
-            <h1 className="hero-title">95% Of Recruiters Check Your CV First</h1>
+            <h1 className="hero-title">
+              95% Of Recruiters Check Your CV First
+            </h1>
 
             <p className="hero-subtitle">
-              Professional ATS-Friendly CV Writing Services That Help You Get Hired Faster.
+              Professional ATS-Friendly CV Writing Services That Help You Get
+              Hired Faster.
             </p>
 
             <div className="hero-buttons">
@@ -105,7 +114,11 @@ Please check my order.`;
             </div>
           </motion.div>
 
-          <motion.div className="hero-right" initial={{ opacity: 0, x: 55 }} animate={{ opacity: 1, x: 0 }}>
+          <motion.div
+            className="hero-right"
+            initial={{ opacity: 0, x: 55 }}
+            animate={{ opacity: 1, x: 0 }}
+          >
             <div className="resume-card">
               <div className="resume-header"></div>
               <div className="resume-line big"></div>
@@ -125,10 +138,18 @@ Please check my order.`;
       </section>
 
       <section className="services-section" id="services">
-        <motion.div className="section-heading" initial={{ opacity: 0, y: 35 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+        <motion.div
+          className="section-heading"
+          initial={{ opacity: 0, y: 35 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+        >
           <span>Our Services</span>
           <h2>Premium Career Branding Services</h2>
-          <p>Everything you need to create a recruiter-ready professional profile.</p>
+          <p>
+            Everything you need to create a recruiter-ready professional
+            profile.
+          </p>
         </motion.div>
 
         <div className="services-grid">
@@ -138,7 +159,13 @@ Please check my order.`;
             "LinkedIn Optimization",
             "Cover Letter Writing",
           ].map((service, index) => (
-            <motion.div className="service-card" key={index} initial={{ opacity: 0, y: 35 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            <motion.div
+              className="service-card"
+              key={index}
+              initial={{ opacity: 0, y: 35 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+            >
               <h3>{service}</h3>
               <p>Premium service designed to improve your career opportunities.</p>
             </motion.div>
@@ -147,10 +174,18 @@ Please check my order.`;
       </section>
 
       <section className="why-section">
-        <motion.div className="section-heading" initial={{ opacity: 0, y: 35 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+        <motion.div
+          className="section-heading"
+          initial={{ opacity: 0, y: 35 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+        >
           <span>Why Choose Us</span>
           <h2>Built For Serious Job Seekers</h2>
-          <p>We create CVs that look professional, pass ATS systems, and impress recruiters.</p>
+          <p>
+            We create CVs that look professional, pass ATS systems, and impress
+            recruiters.
+          </p>
         </motion.div>
 
         <div className="why-grid">
@@ -162,7 +197,13 @@ Please check my order.`;
             "Modern CV redesign",
             "Sri Lanka & global job market ready",
           ].map((item, index) => (
-            <motion.div className="why-card" key={index} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            <motion.div
+              className="why-card"
+              key={index}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+            >
               ✓ {item}
             </motion.div>
           ))}
@@ -170,7 +211,12 @@ Please check my order.`;
       </section>
 
       <section className="pricing-section" id="packages">
-        <motion.div className="section-heading" initial={{ opacity: 0, y: 35 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+        <motion.div
+          className="section-heading"
+          initial={{ opacity: 0, y: 35 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+        >
           <span>Packages</span>
           <h2>Choose Your Career Package</h2>
           <p>Premium CV solutions for students, professionals, and executives.</p>
@@ -188,38 +234,61 @@ Please check my order.`;
               name: "Professional",
               price: "Rs. 4,500",
               desc: "Best for job seekers and professionals.",
-              features: ["ATS Optimized CV", "LinkedIn Support", "Cover Letter", "Unlimited Revisions"],
+              features: [
+                "ATS Optimized CV",
+                "LinkedIn Support",
+                "Cover Letter",
+                "Unlimited Revisions",
+              ],
               popular: true,
             },
             {
               name: "Executive",
               price: "Rs. 8,500",
               desc: "Premium package for senior roles.",
-              features: ["Executive Resume", "LinkedIn Optimization", "Cover Letter", "Career Branding"],
+              features: [
+                "Executive Resume",
+                "LinkedIn Optimization",
+                "Cover Letter",
+                "Career Branding",
+              ],
             },
           ].map((plan, index) => (
-            <motion.div className={`pricing-card ${plan.popular ? "popular" : ""}`} key={index} initial={{ opacity: 0, y: 35 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            <motion.div
+              className={`pricing-card ${plan.popular ? "popular" : ""}`}
+              key={index}
+              initial={{ opacity: 0, y: 35 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+            >
               {plan.popular && <div className="popular-badge">Most Popular</div>}
               <h3>{plan.name}</h3>
               <h2>{plan.price}</h2>
               <p>{plan.desc}</p>
+
               <ul>
                 {plan.features.map((item, i) => (
                   <li key={i}>{item}</li>
                 ))}
               </ul>
+
               <div className="pricing-actions">
-  <a href="#contact">
-    <button>Order Now</button>
-  </a>
-</div>
+                <a href="#contact">
+                  <button>Order Now</button>
+                </a>
+              </div>
             </motion.div>
           ))}
         </div>
       </section>
 
       <section className="portfolio-section" id="portfolio">
-        <motion.div className="section-heading dark-heading" initial={{ opacity: 0, y: 35 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+        <motion.div
+          className="section-heading dark-heading"
+          initial={{ opacity: 0, y: 35 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+        >
           <span>Portfolio</span>
           <h2>Real CV Transformations</h2>
           <p>Upload and preview your normal CV and ATS CV samples.</p>
@@ -252,7 +321,12 @@ Please check my order.`;
         </div>
 
         <div className="portfolio-grid">
-          <motion.div className="cv-preview real-cv-preview" initial={{ opacity: 0, x: -50 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
+          <motion.div
+            className="cv-preview real-cv-preview"
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+          >
             <span>Before</span>
             <h3>Normal CV</h3>
             {beforeCV ? (
@@ -262,11 +336,21 @@ Please check my order.`;
             )}
           </motion.div>
 
-          <motion.div className="transform-arrow" initial={{ opacity: 0, scale: 0.5 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}>
+          <motion.div
+            className="transform-arrow"
+            initial={{ opacity: 0, scale: 0.5 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+          >
             →
           </motion.div>
 
-          <motion.div className="cv-preview real-cv-preview" initial={{ opacity: 0, x: 50 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
+          <motion.div
+            className="cv-preview real-cv-preview"
+            initial={{ opacity: 0, x: 50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+          >
             <span>After</span>
             <h3>ATS CV</h3>
             {afterCV ? (
@@ -286,7 +370,13 @@ Please check my order.`;
             ["4.9★", "Client Rating"],
             ["24h", "Fast Delivery"],
           ].map(([number, text], index) => (
-            <motion.div className="stat-card" key={index} initial={{ opacity: 0, y: 35 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            <motion.div
+              className="stat-card"
+              key={index}
+              initial={{ opacity: 0, y: 35 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+            >
               <h2>{number}</h2>
               <p>{text}</p>
             </motion.div>
@@ -295,7 +385,12 @@ Please check my order.`;
       </section>
 
       <section className="testimonials-section">
-        <motion.div className="section-heading" initial={{ opacity: 0, y: 35 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+        <motion.div
+          className="section-heading"
+          initial={{ opacity: 0, y: 35 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+        >
           <span>Testimonials</span>
           <h2>Success Stories From Clients</h2>
           <p>Thousands of professionals trust NextStep CV for career growth.</p>
@@ -303,13 +398,32 @@ Please check my order.`;
 
         <div className="testimonial-grid">
           {[
-            ["Kasun Perera", "Software Engineer", "I received interview calls within one week after using my new ATS CV."],
-            ["Nimal Fernando", "Project Manager", "Professional design, modern layout, and excellent LinkedIn support."],
-            ["Sarah Wijesinghe", "HR Executive", "My executive resume now looks premium and recruiter-ready."],
+            [
+              "Kasun Perera",
+              "Software Engineer",
+              "I received interview calls within one week after using my new ATS CV.",
+            ],
+            [
+              "Nimal Fernando",
+              "Project Manager",
+              "Professional design, modern layout, and excellent LinkedIn support.",
+            ],
+            [
+              "Sarah Wijesinghe",
+              "HR Executive",
+              "My executive resume now looks premium and recruiter-ready.",
+            ],
           ].map(([name, role, text], index) => (
-            <motion.div className="testimonial-card" key={index} initial={{ opacity: 0, y: 35 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            <motion.div
+              className="testimonial-card"
+              key={index}
+              initial={{ opacity: 0, y: 35 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+            >
               <div className="stars">★★★★★</div>
               <p>“{text}”</p>
+
               <div className="client-info">
                 <h4>{name}</h4>
                 <span>{role}</span>
@@ -320,7 +434,12 @@ Please check my order.`;
       </section>
 
       <section className="faq-section">
-        <motion.div className="section-heading" initial={{ opacity: 0, y: 35 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+        <motion.div
+          className="section-heading"
+          initial={{ opacity: 0, y: 35 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+        >
           <span>FAQ</span>
           <h2>Frequently Asked Questions</h2>
           <p>Everything you need to know before ordering your premium CV.</p>
@@ -328,12 +447,30 @@ Please check my order.`;
 
         <div className="faq-container">
           {[
-            ["What is an ATS-Friendly CV?", "An ATS-Friendly CV is optimized with keywords and formatting that recruitment systems can read easily."],
-            ["How long does delivery take?", "Most CV packages are delivered within 24–48 hours depending on the package."],
-            ["Do you provide LinkedIn optimization?", "Yes. Professional and Executive packages include LinkedIn optimization support."],
-            ["Can I request revisions?", "Yes. We provide revisions based on your selected package."],
+            [
+              "What is an ATS-Friendly CV?",
+              "An ATS-Friendly CV is optimized with keywords and formatting that recruitment systems can read easily.",
+            ],
+            [
+              "How long does delivery take?",
+              "Most CV packages are delivered within 24–48 hours depending on the package.",
+            ],
+            [
+              "Do you provide LinkedIn optimization?",
+              "Yes. Professional and Executive packages include LinkedIn optimization support.",
+            ],
+            [
+              "Can I request revisions?",
+              "Yes. We provide revisions based on your selected package.",
+            ],
           ].map(([q, a], index) => (
-            <motion.div className="faq-card" key={index} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            <motion.div
+              className="faq-card"
+              key={index}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+            >
               <h3>{q}</h3>
               <p>{a}</p>
             </motion.div>
@@ -342,16 +479,29 @@ Please check my order.`;
       </section>
 
       <section className="cta-section">
-        <motion.div className="cta-box" initial={{ opacity: 0, scale: 0.94 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}>
+        <motion.div
+          className="cta-box"
+          initial={{ opacity: 0, scale: 0.94 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+        >
           <span>Ready To Get Hired?</span>
           <h2>Transform Your CV Into A Recruiter-Winning Resume Today</h2>
-          <p>Join thousands of professionals who improved their careers with NextStep CV.</p>
+          <p>
+            Join thousands of professionals who improved their careers with
+            NextStep CV.
+          </p>
 
           <div className="cta-buttons">
             <a href="#contact">
               <button className="primary-btn">Order My CV</button>
             </a>
-            <a href="https://wa.me/94770000000" target="_blank" rel="noreferrer">
+
+            <a
+              href="https://wa.me/94764304068"
+              target="_blank"
+              rel="noreferrer"
+            >
               <button className="secondary-btn">WhatsApp Us</button>
             </a>
           </div>
@@ -359,7 +509,12 @@ Please check my order.`;
       </section>
 
       <section className="order-section" id="contact">
-        <motion.div className="order-box" initial={{ opacity: 0, y: 45 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+        <motion.div
+          className="order-box"
+          initial={{ opacity: 0, y: 45 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+        >
           <div className="order-left">
             <span>Start Your Order</span>
             <h2>Get Your Premium ATS CV Today</h2>
@@ -379,7 +534,9 @@ Please check my order.`;
                 name="cvFile"
                 accept=".pdf,.doc,.docx"
                 hidden
-                onChange={(e) => setFileName(e.target.files[0]?.name || "No file chosen")}
+                onChange={(e) =>
+                  setFileName(e.target.files[0]?.name || "No file chosen")
+                }
               />
               <span className="file-btn">Choose file</span>
               <span className="file-text">{fileName}</span>
@@ -400,9 +557,19 @@ Please check my order.`;
 
       <AnimatePresence>
         {success && (
-          <motion.div className="success-popup" initial={{ opacity: 0, y: 30, scale: 0.9 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 30, scale: 0.9 }}>
+          <motion.div
+            className="success-popup"
+            initial={{ opacity: 0, y: 30, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 30, scale: 0.9 }}
+          >
             <h3>Order Submitted Successfully!</h3>
-            <p>Our CV expert will contact you soon on WhatsApp.</p>
+            <p>Click WhatsApp button to notify our CV expert.</p>
+
+            <a href={whatsappLink} target="_blank" rel="noreferrer">
+              <button>Open WhatsApp</button>
+            </a>
+
             <button onClick={() => setSuccess(false)}>Close</button>
           </motion.div>
         )}
@@ -416,7 +583,11 @@ Please check my order.`;
             <h2>
               NextStep <span>CV</span>
             </h2>
-            <p>Premium ATS-friendly CV writing and career branding service for modern professionals.</p>
+
+            <p>
+              Premium ATS-friendly CV writing and career branding service for
+              modern professionals.
+            </p>
 
             <div className="footer-badges">
               <span>ATS Friendly</span>
@@ -436,8 +607,12 @@ Please check my order.`;
 
           <div className="footer-column">
             <h4>Social</h4>
-            <a href="https://instagram.com" target="_blank" rel="noreferrer">Instagram</a>
-            <a href="https://facebook.com" target="_blank" rel="noreferrer">Facebook</a>
+            <a href="https://instagram.com" target="_blank" rel="noreferrer">
+              Instagram
+            </a>
+            <a href="https://facebook.com" target="_blank" rel="noreferrer">
+              Facebook
+            </a>
             <span>LinkedIn Soon</span>
             <span>TikTok Soon</span>
           </div>
@@ -445,7 +620,13 @@ Please check my order.`;
           <div className="footer-cta">
             <h4>Ready to upgrade your CV?</h4>
             <p>Message us directly and start your order today.</p>
-            <a className="footer-whatsapp" href="https://wa.me/94770000000" target="_blank" rel="noreferrer">
+
+            <a
+              className="footer-whatsapp"
+              href="https://wa.me/94764304068"
+              target="_blank"
+              rel="noreferrer"
+            >
               WhatsApp Us
             </a>
           </div>
@@ -457,7 +638,12 @@ Please check my order.`;
         </div>
       </footer>
 
-      <a className="floating-whatsapp" href="https://wa.me/94770000000" target="_blank" rel="noreferrer">
+      <a
+        className="floating-whatsapp"
+        href="https://wa.me/94764304068"
+        target="_blank"
+        rel="noreferrer"
+      >
         WhatsApp
       </a>
     </>
