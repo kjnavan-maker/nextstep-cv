@@ -32,6 +32,28 @@ router.post("/", upload.single("cvFile"), async (req, res) => {
       cvFile: req.file ? req.file.filename : "",
     });
 
+    router.post("/track", async (req, res) => {
+  try {
+    const { email, whatsapp } = req.body;
+
+    const orders = await Order.find({
+      email,
+      whatsapp,
+    }).sort({ createdAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      orders,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Tracking failed",
+      error: error.message,
+    });
+  }
+});
+
     await newOrder.save();
 
     try {
