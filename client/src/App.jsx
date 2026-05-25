@@ -8,13 +8,13 @@ import PaymentCancel from "./payment/PaymentCancel";
 import TrackOrder from "./pages/TrackOrder";
 import "./styles/global.css";
 
-
-
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
+
+        <Route path="/track-order" element={<TrackOrder />} />
 
         <Route path="/payment-success" element={<PaymentSuccess />} />
         <Route path="/payment-cancel" element={<PaymentCancel />} />
@@ -28,10 +28,8 @@ function App() {
               <AdminDashboard />
             </ProtectedRoute>
           }
-          
         />
       </Routes>
-      <Route path="/track-order" element={<TrackOrder />} />
     </BrowserRouter>
   );
 }
