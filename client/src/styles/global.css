@@ -1951,3 +1951,14 @@ a { text-decoration: none; }
   cursor: pointer;
   text-decoration: none;
 }
+
+.download-final-cv {
+  display: inline-block;
+  margin-top: 16px;
+  padding: 12px 18px;
+  border-radius: 12px;
+  background: #16a34a;
+  color: white;
+  font-weight: 900;
+  text-decoration: none;
+}

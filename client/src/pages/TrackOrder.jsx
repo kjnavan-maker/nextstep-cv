@@ -164,11 +164,22 @@ function TrackOrder() {
                       ? new Date(order.createdAt).toLocaleString()
                       : "N/A"}
                   </p>
+                  {order.finalCvFile && (
+  <a
+    className="download-final-cv"
+    href={`${API.defaults.baseURL.replace("/api", "")}/uploads/${order.finalCvFile}`}
+    target="_blank"
+    rel="noreferrer"
+  >
+    Download Final CV
+  </a>
+)}
                 </div>
               ))}
             </div>
           )}
         </div>
+
       </section>
     </>
   );
