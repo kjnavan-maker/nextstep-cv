@@ -9,6 +9,7 @@ const orderSchema = new mongoose.Schema(
     packageName: String,
     notes: String,
     cvFile: String,
+    finalCvFile: String,
     paymentStatus: {
       type: String,
       default: "Pending",
