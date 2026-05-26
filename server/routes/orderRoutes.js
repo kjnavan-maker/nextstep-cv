@@ -15,6 +15,11 @@ const storage = multer.diskStorage({
     cb(null, Date.now() + "-" + file.originalname);
   },
 });
+const trackingId =
+  "NSCV-" +
+  Date.now().toString().slice(-6) +
+  "-" +
+  Math.random().toString(36).substring(2, 6).toUpperCase();
 
 const upload = multer({ storage });
 
@@ -23,7 +28,14 @@ router.post("/", upload.single("cvFile"), async (req, res) => {
   try {
     const { fullName, email, whatsapp, position, packageName, notes } = req.body;
 
+    const trackingId =
+      "NSCV-" +
+      Date.now().toString().slice(-6) +
+      "-" +
+      Math.random().toString(36).substring(2, 6).toUpperCase();
+
     const newOrder = new Order({
+      trackingId,
       fullName,
       email,
       whatsapp,
@@ -33,10 +45,35 @@ router.post("/", upload.single("cvFile"), async (req, res) => {
       cvFile: req.file ? req.file.filename : "",
     });
 
-    await sendEmail(
-  process.env.EMAIL_USER,
-  "New CV Order Received - NextStep CV",
-  `New CV order received.
+    await newOrder.save();
+
+    try {
+      await sendEmail(
+        email,
+        "NextStep CV - Order Received",
+        `Hello ${fullName},
+
+Thank you for placing your CV order with NextStep CV.
+
+Order Details:
+Tracking ID: ${trackingId}
+Package: ${packageName}
+Job Position: ${position}
+Payment Status: Pending
+Order Status: Pending
+
+Our CV expert will contact you shortly on WhatsApp.
+
+Best regards,
+NextStep CV Team`
+      );
+
+      await sendEmail(
+        process.env.EMAIL_USER,
+        "New CV Order Received - NextStep CV",
+        `New CV order received.
+
+Tracking ID: ${trackingId}
 
 Customer Details:
 Name: ${fullName}
@@ -47,9 +84,7 @@ Job Position: ${position}
 Notes: ${notes || "No notes"}
 
 Please check the admin dashboard.`
-);
-
-      
+      );
     } catch (emailError) {
       console.log("Email failed, but order saved:", emailError.message);
     }

@@ -17,6 +17,10 @@ const orderSchema = new mongoose.Schema(
       type: String,
       default: "Pending",
     },
+    trackingId: {
+    type: String,
+    unique: true,
+    },
   },
   { timestamps: true }
 );
