@@ -164,6 +164,27 @@ router.put(
         { new: true }
       );
 
+      try {
+        await sendEmail(
+          updatedOrder.email,
+          "Your Final CV Is Ready - NextStep CV",
+          `Hello ${updatedOrder.fullName},
+
+Your final CV has been completed and uploaded successfully.
+
+Tracking ID: ${updatedOrder.trackingId}
+Package: ${updatedOrder.packageName}
+Order Status: Delivered
+
+You can now track your order and download your final CV from the website.
+
+Best regards,
+NextStep CV Team`
+        );
+      } catch (emailError) {
+        console.log("Final CV email failed:", emailError.message);
+      }
+
       res.status(200).json({
         success: true,
         message: "Final CV uploaded successfully",
