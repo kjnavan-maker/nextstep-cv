@@ -1940,3 +1940,14 @@ a { text-decoration: none; }
     align-items: flex-start;
   }
 }
+
+.upload-final-btn {
+  background: #7c3aed;
+  border: none;
+  padding: 12px 16px;
+  border-radius: 12px;
+  color: white;
+  font-weight: 800;
+  cursor: pointer;
+  text-decoration: none;
+}

@@ -132,6 +132,33 @@ const AdminDashboard = () => {
     }
   };
 
+  const uploadFinalCv = async (orderId, file) => {
+  if (!file) return;
+
+  try {
+    const formData = new FormData();
+    formData.append("finalCvFile", file);
+
+    const response = await API.put(
+      `/orders/${orderId}/upload-final-cv`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+
+    if (response.data.success) {
+      alert("Final CV uploaded successfully");
+      fetchOrders();
+    }
+  } catch (error) {
+    console.log(error);
+    alert("Final CV upload failed");
+  }
+};
+
   const handleLogout = () => {
     localStorage.removeItem("adminToken");
     localStorage.removeItem("adminLoggedIn");
@@ -345,6 +372,16 @@ const AdminDashboard = () => {
                 <button onClick={() => openEditModal(order)} className="edit-action">
                   Edit
                 </button>
+
+                <label className="upload-final-btn">
+  Upload Final CV
+  <input
+    type="file"
+    accept=".pdf,.doc,.docx"
+    hidden
+    onChange={(e) => uploadFinalCv(order._id, e.target.files[0])}
+  />
+</label>
 
                 <button onClick={() => deleteOrder(order._id)}>Delete</button>
               </div>
