@@ -33,27 +33,23 @@ router.post("/", upload.single("cvFile"), async (req, res) => {
       cvFile: req.file ? req.file.filename : "",
     });
 
-    await newOrder.save();
+    await sendEmail(
+  process.env.EMAIL_USER,
+  "New CV Order Received - NextStep CV",
+  `New CV order received.
 
-    try {
-      await sendEmail(
-        email,
-        "NextStep CV - Order Received",
-        `Hello ${fullName},
-
-Thank you for placing your CV order with NextStep CV.
-
-Order Details:
+Customer Details:
+Name: ${fullName}
+Email: ${email}
+WhatsApp: ${whatsapp}
 Package: ${packageName}
 Job Position: ${position}
-Payment Status: Pending
-Order Status: Pending
+Notes: ${notes || "No notes"}
 
-Our CV expert will contact you shortly on WhatsApp.
+Please check the admin dashboard.`
+);
 
-Best regards,
-NextStep CV Team`
-      );
+      
     } catch (emailError) {
       console.log("Email failed, but order saved:", emailError.message);
     }
