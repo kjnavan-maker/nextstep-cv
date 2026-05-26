@@ -116,6 +116,48 @@ function TrackOrder() {
                     </span>
                   </p>
 
+                  <div className="progress-container">
+  <div
+    className={`progress-step ${
+      order.orderStatus === "Pending" ? "active" : "done"
+    }`}
+  >
+    Pending
+  </div>
+
+  <div
+    className={`progress-step ${
+      order.orderStatus === "In Progress" ? "active" : ""
+    }`}
+  >
+    In Progress
+  </div>
+
+  <div
+    className={`progress-step ${
+      order.orderStatus === "Designing" ? "active" : ""
+    }`}
+  >
+    Designing
+  </div>
+
+  <div
+    className={`progress-step ${
+      order.orderStatus === "Delivered" ? "active" : ""
+    }`}
+  >
+    Delivered
+  </div>
+
+  <div
+    className={`progress-step ${
+      order.orderStatus === "Completed" ? "active" : ""
+    }`}
+  >
+    Completed
+  </div>
+</div>
+
                   <p>
                     <strong>Order Date:</strong>{" "}
                     {order.createdAt
