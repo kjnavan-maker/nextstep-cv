@@ -39,7 +39,15 @@ function TrackOrder() {
 
       <section className="track-page">
         <div className="track-box">
-          <span>Track Your Order</span>
+          <div className="nav-links">
+  <a href="#home">Home</a>
+  <a href="#services">Services</a>
+  <a href="#packages">Packages</a>
+  <a href="#portfolio">Portfolio</a>
+  <a href="#contact">Contact</a>
+
+  <a href="/track-order">Track Order</a>
+</div>
           <h1>Check Your CV Order Status</h1>
           <p>
             Enter the email and WhatsApp number you used when submitting your
