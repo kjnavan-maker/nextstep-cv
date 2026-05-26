@@ -295,6 +295,10 @@ const AdminDashboard = () => {
                   }
                 >
                   <option>Pending</option>
+<option>In Progress</option>
+<option>Designing</option>
+<option>Delivered</option>
+<option>Completed</option>
                   <option>Paid</option>
                   <option>Failed</option>
                 </select>
