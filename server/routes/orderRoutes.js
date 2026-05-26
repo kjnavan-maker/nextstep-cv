@@ -15,11 +15,6 @@ const storage = multer.diskStorage({
     cb(null, Date.now() + "-" + file.originalname);
   },
 });
-const trackingId =
-  "NSCV-" +
-  Date.now().toString().slice(-6) +
-  "-" +
-  Math.random().toString(36).substring(2, 6).toUpperCase();
 
 const upload = multer({ storage });
 
@@ -145,6 +140,44 @@ router.get("/", protect, async (req, res) => {
     });
   }
 });
+
+/* PROTECTED: Admin only - upload final CV */
+router.put(
+  "/:id/upload-final-cv",
+  protect,
+  upload.single("finalCvFile"),
+  async (req, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({
+          success: false,
+          message: "No final CV file uploaded",
+        });
+      }
+
+      const updatedOrder = await Order.findByIdAndUpdate(
+        req.params.id,
+        {
+          finalCvFile: req.file.filename,
+          orderStatus: "Delivered",
+        },
+        { new: true }
+      );
+
+      res.status(200).json({
+        success: true,
+        message: "Final CV uploaded successfully",
+        order: updatedOrder,
+      });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        message: "Upload failed",
+        error: error.message,
+      });
+    }
+  }
+);
 
 /* PROTECTED: Admin only - update status */
 router.put("/:id/status", protect, async (req, res) => {
