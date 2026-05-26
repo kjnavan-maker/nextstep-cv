@@ -282,6 +282,9 @@ const AdminDashboard = () => {
               <p><strong>Position:</strong> {order.position}</p>
               <p><strong>Notes:</strong> {order.notes || "No notes"}</p>
               <p>
+  <strong>Tracking ID:</strong> {order.trackingId || "N/A"}
+</p>
+              <p>
                 <strong>Order Date:</strong>{" "}
                 {order.createdAt ? new Date(order.createdAt).toLocaleString() : "N/A"}
               </p>
@@ -295,12 +298,8 @@ const AdminDashboard = () => {
                   }
                 >
                   <option>Pending</option>
-<option>In Progress</option>
-<option>Designing</option>
-<option>Delivered</option>
-<option>Completed</option>
-                  <option>Paid</option>
-                  <option>Failed</option>
+<option>Paid</option>
+<option>Failed</option>
                 </select>
               </div>
 
@@ -313,8 +312,10 @@ const AdminDashboard = () => {
                   }
                 >
                   <option>Pending</option>
-                  <option>In Progress</option>
-                  <option>Completed</option>
+<option>In Progress</option>
+<option>Designing</option>
+<option>Delivered</option>
+<option>Completed</option>
                 </select>
               </div>
 
@@ -369,9 +370,11 @@ const AdminDashboard = () => {
             </select>
 
             <select name="paymentStatus" value={editForm.paymentStatus} onChange={handleEditChange}>
-              <option>Pending</option>
-              <option>Paid</option>
-              <option>Failed</option>
+             <option>Pending</option>
+<option>In Progress</option>
+<option>Designing</option>
+<option>Delivered</option>
+<option>Completed</option>
             </select>
 
             <select name="orderStatus" value={editForm.orderStatus} onChange={handleEditChange}>
