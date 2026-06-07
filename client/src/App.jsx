@@ -13,14 +13,10 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
-
         <Route path="/track-order" element={<TrackOrder />} />
-
         <Route path="/payment-success" element={<PaymentSuccess />} />
         <Route path="/payment-cancel" element={<PaymentCancel />} />
-
         <Route path="/admin/login" element={<AdminLogin />} />
-
         <Route
           path="/admin/dashboard"
           element={

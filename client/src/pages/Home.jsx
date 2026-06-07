@@ -115,25 +115,17 @@ Please check my order.`;
           </motion.div>
 
           <motion.div
-            className="hero-right"
-            initial={{ opacity: 0, x: 55 }}
-            animate={{ opacity: 1, x: 0 }}
-          >
-            <div className="resume-card">
-              <div className="resume-header"></div>
-              <div className="resume-line big"></div>
-              <div className="resume-line"></div>
-              <div className="resume-line"></div>
+  className="hero-right"
+  initial={{ opacity: 0, x: 55 }}
+  animate={{ opacity: 1, x: 0 }}
+>
+  <div className="real-resume-card">
+    <img src="/cv-preview.png" alt="NextStep CV Sample" />
 
-              <div className="score-box">
-                <h3>ATS Score</h3>
-                <strong>96%</strong>
-              </div>
-            </div>
-
-            <div className="floating-card top-card">Recruiter Ready</div>
-            <div className="floating-card bottom-card">Hired Faster ↑</div>
-          </motion.div>
+    <div className="floating-card top-card">Recruiter Ready</div>
+    <div className="floating-card bottom-card">Hired Faster ↑</div>
+  </div>
+</motion.div>
         </div>
       </section>
 
@@ -320,46 +312,21 @@ Please check my order.`;
           </label>
         </div>
 
-        <div className="portfolio-grid">
-          <motion.div
-            className="cv-preview real-cv-preview"
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-          >
-            <span>Before</span>
-            <h3>Normal CV</h3>
-            {beforeCV ? (
-              <iframe src={beforeCV} title="Normal CV Preview"></iframe>
-            ) : (
-              <p className="empty-cv">Upload normal CV to preview here</p>
-            )}
-          </motion.div>
+        <div className="portfolio-preview-grid">
+  <div className="portfolio-cv-card">
+    <span>Before</span>
+    <h3>Normal CV</h3>
+    <img src="/normal-cv.png" alt="Normal CV Preview" />
+  </div>
 
-          <motion.div
-            className="transform-arrow"
-            initial={{ opacity: 0, scale: 0.5 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-          >
-            →
-          </motion.div>
+  <div className="portfolio-arrow">→</div>
 
-          <motion.div
-            className="cv-preview real-cv-preview"
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-          >
-            <span>After</span>
-            <h3>ATS CV</h3>
-            {afterCV ? (
-              <iframe src={afterCV} title="ATS CV Preview"></iframe>
-            ) : (
-              <p className="empty-cv">Upload ATS CV to preview here</p>
-            )}
-          </motion.div>
-        </div>
+  <div className="portfolio-cv-card">
+    <span>After</span>
+    <h3>ATS CV</h3>
+    <img src="/ats-cv.png" alt="ATS CV Preview" />
+  </div>
+</div>
       </section>
 
       <section className="stats-section">

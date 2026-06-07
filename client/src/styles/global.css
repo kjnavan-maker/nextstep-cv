@@ -1962,3 +1962,220 @@ a { text-decoration: none; }
   font-weight: 900;
   text-decoration: none;
 }
+
+.real-resume-card {
+  position: relative;
+  width: 420px;
+  max-width: 100%;
+  margin: 0 auto;
+  border-radius: 32px;
+  overflow: hidden;
+  background: #ffffff;
+  box-shadow: 0 40px 120px rgba(0, 0, 0, 0.45);
+  animation: floatResume 5s ease-in-out infinite;
+}
+
+.real-resume-card img {
+  width: 100%;
+  height: 560px;
+  object-fit: cover;
+  object-position: top;
+  display: block;
+}
+
+@keyframes floatResume {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-18px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.real-resume-card .top-card {
+  top: 90px;
+  left: -35px;
+}
+
+.real-resume-card .bottom-card {
+  bottom: 95px;
+  right: -45px;
+}
+
+.real-resume-card {
+  width: 380px;
+  height: 520px;
+}
+
+.real-resume-card img {
+  height: 520px;
+  object-fit: cover;
+  object-position: top;
+}
+
+.top-card {
+  top: 40px;
+  left: -20px;
+}
+
+.bottom-card {
+  bottom: 60px;
+  right: -20px;
+}
+
+.real-resume-card::before {
+  content: "";
+  position: absolute;
+  inset: -30px;
+  background: radial-gradient(
+    circle,
+    rgba(255,107,0,.25),
+    transparent 70%
+  );
+  z-index: -1;
+}
+
+.portfolio-preview-grid {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 45px;
+  align-items: center;
+  margin-top: 70px;
+}
+
+.portfolio-cv-card {
+  background: #f8fafc;
+  border-radius: 36px;
+  padding: 30px;
+  min-height: 680px;
+  text-align: center;
+  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+}
+
+.portfolio-cv-card span {
+  color: #ff6b00;
+  font-weight: 900;
+  font-size: 22px;
+}
+
+.portfolio-cv-card h3 {
+  color: #071739;
+  font-size: 42px;
+  margin: 20px 0 30px;
+}
+
+.portfolio-cv-card img {
+  width: 100%;
+  height: 520px;
+  object-fit: cover;
+  object-position: top;
+  border-radius: 22px;
+}
+
+.portfolio-arrow {
+  color: #ff6b00;
+  font-size: 70px;
+  font-weight: 900;
+}
+
+@media (max-width: 900px) {
+  .portfolio-preview-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .portfolio-arrow {
+    transform: rotate(90deg);
+    text-align: center;
+  }
+
+  .portfolio-cv-card {
+    min-height: auto;
+  }
+}
+
+.portfolio-section {
+  padding: 140px 7% 100px;
+  position: relative;
+}
+
+.portfolio-actions {
+  display: flex;
+  justify-content: center;
+  gap: 25px;
+  margin: 45px 0 65px;
+  flex-wrap: wrap;
+}
+
+.portfolio-actions button {
+  background: rgba(255, 255, 255, 0.09);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: #fff;
+  padding: 18px 42px;
+  border-radius: 18px;
+  font-size: 20px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.portfolio-preview-grid {
+  display: grid;
+  grid-template-columns: 1fr 90px 1fr;
+  gap: 35px;
+  align-items: center;
+}
+
+.portfolio-cv-card {
+  background: linear-gradient(180deg, #ffffff, #f1f5f9);
+  border-radius: 38px;
+  padding: 34px;
+  text-align: center;
+  min-height: 650px;
+  box-shadow: 0 45px 120px rgba(0, 0, 0, 0.38);
+  overflow: hidden;
+}
+
+.portfolio-cv-card span {
+  color: #ff6b00;
+  font-weight: 900;
+  font-size: 22px;
+}
+
+.portfolio-cv-card h3 {
+  color: #071739;
+  font-size: 44px;
+  margin: 16px 0 28px;
+}
+
+.portfolio-cv-card img {
+  width: 100%;
+  height: 480px;
+  object-fit: cover;
+  object-position: top;
+  border-radius: 24px;
+  box-shadow: 0 20px 60px rgba(7, 23, 57, 0.18);
+}
+
+.portfolio-arrow {
+  color: #ff6b00;
+  font-size: 80px;
+  font-weight: 900;
+  text-align: center;
+}
+
+@media (max-width: 900px) {
+  .portfolio-preview-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .portfolio-arrow {
+    transform: rotate(90deg);
+  }
+
+  .portfolio-cv-card {
+    min-height: auto;
+  }
+}
