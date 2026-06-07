@@ -218,13 +218,13 @@ Please check my order.`;
           {[
             {
               name: "Basic",
-              price: "Rs. 2,500",
+              price: "Rs. 1,499",
               desc: "Perfect for students and freshers.",
               features: ["ATS Friendly CV", "1 Revision", "2 Days Delivery"],
             },
             {
               name: "Professional",
-              price: "Rs. 4,500",
+              price: "Rs. 4,449",
               desc: "Best for job seekers and professionals.",
               features: [
                 "ATS Optimized CV",
@@ -236,7 +236,7 @@ Please check my order.`;
             },
             {
               name: "Executive",
-              price: "Rs. 8,500",
+              price: "Rs. 8,499",
               desc: "Premium package for senior roles.",
               features: [
                 "Executive Resume",
